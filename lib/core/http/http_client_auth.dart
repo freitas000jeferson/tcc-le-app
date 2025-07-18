@@ -9,8 +9,8 @@ import 'package:tcc_le_app/core/utils/failures.dart';
 
 class HttpClientAuth {
   late Dio client;
-  HttpClientAuth(String route) {
-    client = Dio();
+  HttpClientAuth(String route, {Dio? dio}) {
+    client = dio ?? Dio();
     client.options = BaseOptions(baseUrl: "${API.BASE_URL}/$route");
     client.options.connectTimeout = Duration(seconds: 5);
     client.options.receiveTimeout = Duration(seconds: 3);

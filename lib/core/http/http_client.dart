@@ -9,8 +9,9 @@ import 'package:tcc_le_app/core/http/utils/validate_response.dart';
 import 'package:tcc_le_app/core/utils/failures.dart';
 
 class HttpClient {
-  final Dio client = Dio();
-  HttpClient(String route) {
+  late Dio client;
+  HttpClient(String route, {Dio? dio}) {
+    client = dio ?? Dio();
     client.options = BaseOptions(baseUrl: "${API.BASE_URL}/$route");
     client.options.connectTimeout = Duration(seconds: 5);
     client.options.receiveTimeout = Duration(seconds: 3);

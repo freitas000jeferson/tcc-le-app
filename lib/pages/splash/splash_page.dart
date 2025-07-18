@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/route_manager.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:tcc_le_app/components/layouts/dafault_layout.dart';
+import 'package:tcc_le_app/components/modules/get_permissions.dart';
 import 'package:tcc_le_app/components/ui/text.dart';
 import 'package:tcc_le_app/core/routes/route_paths.dart';
 import 'package:tcc_le_app/core/styles/colors.dart';
@@ -22,6 +23,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    GetPermissions.solicitarPermissaoMicrofone(context);
     nextScreen();
   }
 

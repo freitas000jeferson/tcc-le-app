@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         TextButton(
                           onPressed: () {
-                            Get.toNamed(RoutePaths.FORGOT_PAGE);
+                            Get.toNamed(RoutePaths.FORGOT_PASSWORD_PAGE);
                           },
                           child: Text(
                             "Forgot password?",
@@ -94,7 +94,6 @@ class _LoginPageState extends State<LoginPage> {
 
             CustomButton(
               variant: ButtonVariant.secondary,
-
               onPressed: () {
                 Get.toNamed(RoutePaths.MAIN_TAB_PAGE);
               },

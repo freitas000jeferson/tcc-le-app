@@ -84,7 +84,6 @@ class CustomButton extends StatelessWidget {
           backgroundColor: _bgColor,
           disabledBackgroundColor: isLoading ? _bgColor : _bgDisableColor,
           padding: padding ?? CustomSpacing.squishSM,
-
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               CustomBorders.radiusSM,

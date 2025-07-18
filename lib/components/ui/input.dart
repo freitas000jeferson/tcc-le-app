@@ -14,6 +14,7 @@ class CustomInput extends StatefulWidget {
   final bool isPassword;
   final TextInputType? keyboardType;
   final IconData? icon;
+  final int? maxLength;
   late BorderRadius? radius;
   CustomInput({
     super.key,
@@ -26,6 +27,7 @@ class CustomInput extends StatefulWidget {
     this.isPassword = false,
     this.icon,
     this.radius,
+    this.maxLength,
     this.keyboardType = TextInputType.text,
   }) {
     radius = radius ?? BorderRadius.circular(CustomBorders.radiusSM);
@@ -54,6 +56,8 @@ class _CustomInputState extends State<CustomInput> {
           color: CustomColors.background,
         ),
         child: TextFormField(
+          maxLength: widget.maxLength,
+          keyboardType: widget.keyboardType,
           controller: widget.controller,
           onChanged: (value) {
             if (widget.onChanged != null) {

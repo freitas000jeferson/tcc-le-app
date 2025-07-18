@@ -55,7 +55,6 @@ class MainTabPage extends StatelessWidget {
               preferredSize: const Size.fromHeight(40),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(CustomBorders.radiusFull),
-
                 child: Container(
                   height: 30,
                   // padding: EdgeInsets.symmetric(vertical: 2),

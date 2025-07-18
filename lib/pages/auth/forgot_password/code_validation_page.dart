@@ -10,9 +10,8 @@ import 'package:tcc_le_app/core/styles/styles.dart';
 import 'package:tcc_le_app/core/utils/validators.dart';
 import 'package:tcc_le_app/pages/auth/forgot_password/controllers/forgot_password_controller.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
-  ForgotPasswordPage({super.key});
-
+class CodeValidationPage extends StatelessWidget {
+  CodeValidationPage({super.key});
   final ForgotPasswordController controller =
       Get.isRegistered<ForgotPasswordController>()
           ? Get.find()
@@ -33,7 +32,7 @@ class ForgotPasswordPage extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
             CustomTitle(
-              "Fill in with the email registered in the app!",
+              "We sent a verification code to your email!",
               variant: TitleVariant.xs,
             ),
             Expanded(
@@ -45,11 +44,13 @@ class ForgotPasswordPage extends StatelessWidget {
                   // spacing: CustomSpacing.xxs,
                   children: [
                     // SizedBox(height: Get.height * 0.30),
-                    CustomText("Email", fontWeight: CustomFonts.weightMedium),
+                    CustomText("Code", fontWeight: CustomFonts.weightMedium),
                     CustomInput(
-                      hintText: "Enter you e-mail",
-                      icon: Icons.person,
-                      onChanged: controller.onEmailChanged,
+                      hintText: "Enter code validation",
+                      icon: Icons.onetwothree_outlined,
+                      onChanged: controller.onCodeChanged,
+                      maxLength: 6,
+                      keyboardType: TextInputType.number,
                     ),
                     SizedBox(height: CustomSpacing.xxs),
                   ],
@@ -63,10 +64,9 @@ class ForgotPasswordPage extends StatelessWidget {
                 variant: ButtonVariant.secondary,
                 padding: CustomSpacing.squishMD,
                 onPressed: () {
-                  Get.toNamed(RoutePaths.CODE_VALIDATION_PAGE);
+                  Get.toNamed(RoutePaths.RESET_PASSWORD_PAGE);
                 },
-
-                enable: Validators.isValidEmail(controller.email.value),
+                enable: Validators.isValidCode(controller.code.value),
                 child: Text("Continue", style: CustomTextStyles.button),
               ),
             ),

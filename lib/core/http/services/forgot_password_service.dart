@@ -4,21 +4,15 @@ import 'package:tcc_le_app/core/http/http_client.dart';
 import 'package:tcc_le_app/core/http/utils/validate_response.dart';
 import 'package:tcc_le_app/core/utils/failures.dart';
 
-class LoginService {
+class ForgotPasswordService {
   late HttpClient client;
-  LoginService({Dio? dio}) {
-    client = HttpClient("auth/login", dio: dio);
+  ForgotPasswordService({Dio? dio}) {
+    client = HttpClient("auth/forgot-password", dio: dio);
   }
 
-  Future<Either<Failure, dynamic>> handle({
-    required String username,
-    required String password,
-  }) async {
+  Future<Either<Failure, dynamic>> handle({required String email}) async {
     try {
-      return await client.post(
-        "",
-        data: {"username": username, "password": password},
-      );
+      return await client.post("", data: {"email": email});
     } catch (e) {
       return throwError(e);
     }

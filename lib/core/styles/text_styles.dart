@@ -66,4 +66,17 @@ class CustomTextStyles {
     fontWeight: CustomFonts.weightMedium,
     fontStyle: FontStyle.normal,
   );
+
+  static TextStyle error = GoogleFonts.roboto(
+    color: CustomColors.feedbackError,
+    fontSize: CustomFonts.sm,
+    fontWeight: CustomFonts.weightMedium,
+    fontStyle: FontStyle.normal,
+  );
+  static TextStyle success = GoogleFonts.roboto(
+    color: CustomColors.feedbackSuccess,
+    fontSize: CustomFonts.sm,
+    fontWeight: CustomFonts.weightMedium,
+    fontStyle: FontStyle.normal,
+  );
 }

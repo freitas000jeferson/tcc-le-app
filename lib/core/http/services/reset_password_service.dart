@@ -4,24 +4,21 @@ import 'package:tcc_le_app/core/http/http_client.dart';
 import 'package:tcc_le_app/core/http/utils/validate_response.dart';
 import 'package:tcc_le_app/core/utils/failures.dart';
 
-class RefreshTokenService {
+class ResetPasswordService {
   late HttpClient client;
-  RefreshTokenService({Dio? dio}) {
-    client = HttpClient("auth/refresh-token", dio: dio);
+  ResetPasswordService({Dio? dio}) {
+    client = HttpClient("auth/reset-password", dio: dio);
   }
 
   Future<Either<Failure, dynamic>> handle({
-    required String accessToken,
-    required String refreshToken,
+    required String email,
+    required String code,
+    required String password,
   }) async {
     try {
       return await client.post(
         "",
-        data: {
-          "grantType": "refresh_token",
-          "accessToken": accessToken,
-          "refreshToken": refreshToken,
-        },
+        data: {"email": email, "password": password, "code": code},
       );
     } catch (e) {
       return throwError(e);
