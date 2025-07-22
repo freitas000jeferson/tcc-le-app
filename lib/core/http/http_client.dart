@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:tcc_le_app/core/constants/api.dart';
+import 'package:tcc_le_app/core/http/authorization/custom_interceptor.dart';
 import 'package:tcc_le_app/core/http/utils/string_utils.dart';
 import 'package:tcc_le_app/core/http/utils/validate_response.dart';
 import 'package:tcc_le_app/core/utils/failures.dart';
@@ -19,6 +20,7 @@ class HttpClient {
     String clientSecret = API.CLIENT_SECRET;
     String basicToken = stringEncoder('$clientId:$clientSecret');
     client.options.headers.addAll({"Authorization": "Basic $basicToken"});
+    client.interceptors.addAll([CustomInterceptor()]);
   }
   Future<Either<Failure, T>> post<T>(
     String path, {

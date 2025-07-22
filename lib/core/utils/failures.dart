@@ -22,11 +22,17 @@ class RequiredFailure extends Failure {
 
 class ServerFailure extends Failure {
   final String? message;
+  final int? statusCode;
 
-  ServerFailure(this.message);
+  ServerFailure(this.message, {this.statusCode});
 
   @override
   List<Object?> get props => [message];
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "$message";
+  }
 }
 
 class PermissionFailure extends Failure {
@@ -43,10 +49,11 @@ class FailuresMessages {
   // ignore: non_constant_identifier_names
   static Map<int, dynamic> HTTP_FAILUES = {
     400: "Request Error",
-    401: "Not Authorized Error",
-    403: "Connection Lost Error",
+    401: "Unauthorized Error",
+    403: "Forbidden Error",
     404: "Not Found Error",
     408: "Time Out Error",
+    500: "Server internal Error",
   };
 }
 

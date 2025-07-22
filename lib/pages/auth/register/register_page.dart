@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tcc_le_app/components/layouts/dafault_layout.dart';
 import 'package:tcc_le_app/components/ui/button.dart';
+import 'package:tcc_le_app/components/ui/feedback.dart';
 import 'package:tcc_le_app/components/ui/input.dart';
 import 'package:tcc_le_app/components/ui/text.dart';
 import 'package:tcc_le_app/components/ui/title.dart';
 import 'package:tcc_le_app/core/routes/route_paths.dart';
 import 'package:tcc_le_app/core/styles/styles.dart';
+import 'package:tcc_le_app/pages/auth/register/controllers/register_controller.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key});
 
-  @override
-  State<RegisterPage> createState() => _RegisterPageState();
-}
+  final RegisterController _controller =
+      Get.isRegistered<RegisterController>()
+          ? Get.find()
+          : Get.put(RegisterController());
 
-class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,11 +48,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     CustomInput(
                       hintText: "Enter you user name",
                       icon: Icons.person,
+                      onChanged: _controller.onUsernameChanged,
                     ),
                     SizedBox(height: CustomSpacing.xxs),
 
                     CustomText("Email", fontWeight: CustomFonts.weightMedium),
-                    CustomInput(hintText: "Enter you e-mail", icon: Icons.mail),
+                    CustomInput(
+                      hintText: "Enter you e-mail",
+                      icon: Icons.mail,
+                      onChanged: _controller.onEmailChanged,
+                    ),
                     SizedBox(height: CustomSpacing.xxs),
 
                     CustomText(
@@ -61,6 +68,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintText: "Enter you password",
                       icon: Icons.lock_rounded,
                       isPassword: true,
+                      obscure: true,
+                      onChanged: _controller.onPasswordChanged,
                     ),
                     SizedBox(height: CustomSpacing.xxs),
 
@@ -72,6 +81,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintText: "Confirm password",
                       icon: Icons.lock_rounded,
                       isPassword: true,
+                      obscure: true,
+                      onChanged: _controller.onConfirmPasswordChanged,
+                    ),
+                    SizedBox(height: CustomSpacing.xxs),
+                    Obx(
+                      () => CustomFeedback(
+                        condition: _controller.isFailure(),
+                        message: _controller.registerStatus.value.error ?? "",
+                      ),
                     ),
                   ],
                 ),
@@ -82,7 +100,15 @@ class _RegisterPageState extends State<RegisterPage> {
             CustomButton(
               variant: ButtonVariant.secondary,
 
-              onPressed: () {},
+              onPressed: () async {
+                FocusScope.of(context).unfocus();
+                var response = await _controller.register();
+                if (response) {
+                  Get.offAndToNamed(RoutePaths.LOGIN_PAGE);
+                }
+              },
+              enable: _controller.allInputsAreValid(),
+              isLoading: _controller.registerStatus.value.hasLoading(),
               child: Text("Sign Up", style: CustomTextStyles.button),
             ),
             SizedBox(height: CustomSpacing.xxs),

@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:tcc_le_app/core/constants/api.dart';
 import 'package:tcc_le_app/core/http/authorization/bearer_authorization.dart';
+import 'package:tcc_le_app/core/http/authorization/custom_interceptor.dart';
 import 'package:tcc_le_app/core/http/utils/validate_response.dart';
 import 'package:tcc_le_app/core/utils/failures.dart';
 
@@ -14,7 +15,7 @@ class HttpClientAuth {
     client.options = BaseOptions(baseUrl: "${API.BASE_URL}/$route");
     client.options.connectTimeout = Duration(seconds: 5);
     client.options.receiveTimeout = Duration(seconds: 3);
-    client.interceptors.addAll([BearerInterceptor()]);
+    client.interceptors.addAll([BearerInterceptor(), CustomInterceptor()]);
   }
   Future<Either<Failure, T>> post<T>(
     String path, {

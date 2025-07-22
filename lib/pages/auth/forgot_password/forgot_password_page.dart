@@ -42,9 +42,7 @@ class ForgotPasswordPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  // spacing: CustomSpacing.xxs,
                   children: [
-                    // SizedBox(height: Get.height * 0.30),
                     CustomText("Email", fontWeight: CustomFonts.weightMedium),
                     CustomInput(
                       hintText: "Enter you e-mail",
@@ -65,7 +63,6 @@ class ForgotPasswordPage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(RoutePaths.CODE_VALIDATION_PAGE);
                 },
-
                 enable: Validators.isValidEmail(controller.email.value),
                 child: Text("Continue", style: CustomTextStyles.button),
               ),

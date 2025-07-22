@@ -79,4 +79,10 @@ class CustomTextStyles {
     fontWeight: CustomFonts.weightMedium,
     fontStyle: FontStyle.normal,
   );
+  static TextStyle warn = GoogleFonts.roboto(
+    color: CustomColors.feedbackWarn,
+    fontSize: CustomFonts.sm,
+    fontWeight: CustomFonts.weightMedium,
+    fontStyle: FontStyle.normal,
+  );
 }

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:tcc_le_app/components/layouts/dafault_layout.dart';
 import 'package:tcc_le_app/components/ui/button.dart';
+import 'package:tcc_le_app/components/ui/feedback.dart';
 import 'package:tcc_le_app/components/ui/input.dart';
 import 'package:tcc_le_app/components/ui/text.dart';
 import 'package:tcc_le_app/components/ui/title.dart';
 import 'package:tcc_le_app/core/routes/route_paths.dart';
 import 'package:tcc_le_app/core/styles/styles.dart';
+import 'package:tcc_le_app/core/utils/generic_state.dart';
+import 'package:tcc_le_app/core/utils/validators.dart';
+import 'package:tcc_le_app/pages/auth/login/controllers/user_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +20,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final UserController _controller =
+      Get.isRegistered<UserController>()
+          ? Get.find()
+          : Get.put(UserController());
+
+  final size = (Get.width - 136) / 8;
   String email = "";
   String password = "";
 
@@ -69,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                       hintText: "Enter you password",
                       icon: Icons.lock_rounded,
                       isPassword: true,
+                      obscure: true,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -86,6 +97,14 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     SizedBox(height: CustomSpacing.xs),
+                    Obx(
+                      () => CustomFeedback(
+                        condition:
+                            _controller.loginStatus.value.status ==
+                            RequestStatus.failure,
+                        message: _controller.loginStatus.value.error ?? "",
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -94,10 +113,21 @@ class _LoginPageState extends State<LoginPage> {
 
             CustomButton(
               variant: ButtonVariant.secondary,
-              onPressed: () {
-                Get.toNamed(RoutePaths.MAIN_TAB_PAGE);
+              onPressed: () async {
+                FocusScope.of(context).unfocus();
+                bool login = await _controller.login(
+                  username: email,
+                  password: password,
+                );
+                if (login) {
+                  Get.offAndToNamed(RoutePaths.MAIN_TAB_PAGE);
+                }
               },
-              enable: email != "" && password != "",
+              enable:
+                  email != "" &&
+                  password != "" &&
+                  Validators.isValidEmail(email),
+              isLoading: _controller.loginStatus.value.hasLoading(),
               child: Text("Sign In", style: CustomTextStyles.button),
             ),
             SizedBox(height: CustomSpacing.xxs),
