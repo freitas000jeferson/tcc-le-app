@@ -2,6 +2,7 @@ class API {
   static const ISPROD = true;
   static const FILES = "";
   static const BASE_URL = "http://192.168.3.4:3000/api/v1";
+  static const SOCKET_URL = "ws://192.168.3.4:3000/";
 
   static const CLIENT_ID = "tcc2_chatbot_mobile";
   static const CLIENT_SECRET =
