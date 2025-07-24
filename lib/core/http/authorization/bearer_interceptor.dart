@@ -1,6 +1,8 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:tcc_le_app/core/http/authorization/bearer_authorization_service.dart';
 import 'package:tcc_le_app/core/http/domain/oauth_token.dart';
+import 'package:tcc_le_app/core/utils/failures.dart';
 
 class BearerInterceptor implements Interceptor {
   final BearerAuthorizationService authorizationService;
@@ -14,9 +16,15 @@ class BearerInterceptor implements Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    OAuthToken? token = await authorizationService.getAccessToken();
-    if (token != null && token.accessToken != null) {
-      options.headers.addAll({'Authorization': "Bearer ${token.accessToken}"});
+    Either<Failure, OAuthToken> response =
+        await authorizationService.getAccessToken();
+    if (response.isRight()) {
+      OAuthToken token = (response as Right).value;
+      if (token.accessToken != null) {
+        options.headers.addAll({
+          'Authorization': "Bearer ${token.accessToken}",
+        });
+      }
     }
     return handler.next(options);
   }
@@ -24,12 +32,16 @@ class BearerInterceptor implements Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      OAuthToken? token = await authorizationService.refreshAccessToken();
-      if (token != null && token.accessToken != null) {
-        err.requestOptions.headers['Authorization'] =
-            "Bearer ${token.accessToken}";
+      Either<Failure, OAuthToken> response =
+          await authorizationService.refreshAccessToken();
+      if (response.isRight()) {
+        OAuthToken token = (response as Right).value;
+        if (token.accessToken != null) {
+          err.requestOptions.headers['Authorization'] =
+              "Bearer ${token.accessToken}";
 
-        return handler.resolve(await dio.fetch(err.requestOptions));
+          return handler.resolve(await dio.fetch(err.requestOptions));
+        }
       }
     }
     return handler.next(err);

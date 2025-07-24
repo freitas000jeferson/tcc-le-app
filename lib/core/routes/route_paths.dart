@@ -11,4 +11,5 @@ class RoutePaths {
   static const QUIZ_PAGE = "/quiz_page";
   static const VOICE_PAGE = "/voice_page";
   static const MAIN_TAB_PAGE = "/main_tab_page";
+  static const SETTINGS_PAGE = "/settings_page";
 }

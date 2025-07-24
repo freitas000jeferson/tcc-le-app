@@ -51,6 +51,14 @@ class MainTabPage extends StatelessWidget {
                 ],
               ),
             ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Get.toNamed(RoutePaths.SETTINGS_PAGE);
+                },
+                icon: Icon(Icons.settings),
+              ),
+            ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(40),
               child: ClipRRect(

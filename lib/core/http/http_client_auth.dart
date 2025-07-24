@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:tcc_le_app/core/constants/api.dart';
-import 'package:tcc_le_app/core/http/authorization/bearer_authorization.dart';
+import 'package:tcc_le_app/core/http/authorization/bearer_interceptor.dart';
 import 'package:tcc_le_app/core/http/authorization/custom_interceptor.dart';
 import 'package:tcc_le_app/core/http/utils/validate_response.dart';
 import 'package:tcc_le_app/core/utils/failures.dart';

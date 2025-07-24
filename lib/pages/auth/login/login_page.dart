@@ -10,7 +10,7 @@ import 'package:tcc_le_app/core/routes/route_paths.dart';
 import 'package:tcc_le_app/core/styles/styles.dart';
 import 'package:tcc_le_app/core/utils/generic_state.dart';
 import 'package:tcc_le_app/core/utils/validators.dart';
-import 'package:tcc_le_app/pages/auth/login/controllers/user_controller.dart';
+import 'package:tcc_le_app/pages/auth/login/controllers/auth_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,10 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final UserController _controller =
-      Get.isRegistered<UserController>()
-          ? Get.find()
-          : Get.put(UserController());
+  final AuthController _controller = Get.find<AuthController>();
 
   final size = (Get.width - 136) / 8;
   String email = "";

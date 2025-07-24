@@ -22,6 +22,7 @@ class Button {
 
 class MessageDtoResponse {
   final dynamic id;
+  final dynamic objectId;
   final dynamic userId; // Use appropriate type for User or String
   final String from;
   final String to;
@@ -34,6 +35,7 @@ class MessageDtoResponse {
 
   MessageDtoResponse({
     this.id,
+    this.objectId,
     required this.userId,
     required this.from,
     required this.to,
@@ -48,6 +50,7 @@ class MessageDtoResponse {
   factory MessageDtoResponse.fromJson(Map<String, dynamic> json) {
     return MessageDtoResponse(
       id: json['id'],
+      objectId: json['id'],
       userId: json['userId'],
       from: json['from'],
       to: json['to'],
@@ -70,6 +73,7 @@ class MessageDtoResponse {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      "objectId": objectId,
       'userId': userId,
       'from': from,
       'to': to,

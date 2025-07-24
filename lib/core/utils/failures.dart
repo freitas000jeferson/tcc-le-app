@@ -57,6 +57,16 @@ class FailuresMessages {
   };
 }
 
+class OAuthFailure extends Failure {
+  final String code;
+  final String message;
+
+  OAuthFailure(this.code, this.message) : super();
+
+  @override
+  String toString() => 'OAuthException: [$code] $message';
+}
+
 class OAuthException extends Error {
   final String code;
   final String message;

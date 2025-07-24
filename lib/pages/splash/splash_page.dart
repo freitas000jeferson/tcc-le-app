@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/route_manager.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart';
 import 'package:tcc_le_app/components/layouts/dafault_layout.dart';
 import 'package:tcc_le_app/components/modules/get_permissions.dart';
 import 'package:tcc_le_app/components/ui/text.dart';
 import 'package:tcc_le_app/core/routes/route_paths.dart';
 import 'package:tcc_le_app/core/styles/colors.dart';
 import 'package:tcc_le_app/core/styles/fonts.dart';
+import 'package:tcc_le_app/pages/auth/login/controllers/auth_controller.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -19,7 +19,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final GetStorage storage = GetStorage("user");
+  final AuthController _controller = Get.find<AuthController>();
+
   @override
   void initState() {
     super.initState();
@@ -27,15 +28,23 @@ class _SplashPageState extends State<SplashPage> {
     nextScreen();
   }
 
-  Timer nextScreen() {
+  Future nextScreen() async {
     var duration = Duration(milliseconds: 5750);
+
+    String redirect = RoutePaths.LOGIN_PAGE;
+    if (await _controller.hasAuthenticated()) {
+      redirect = RoutePaths.MAIN_TAB_PAGE;
+    }
     return Timer(duration, () {
+      Get.offAndToNamed(redirect);
+      return;
+
       // if (storage.hasData("user")) {
       //   Get.offAndToNamed(RouteNames.CHAT_PAGE);
       //   return;
       // }
       // Get.offAndToNamed(RouteNames.TUTORIAL_PAGE);
-      Get.offAndToNamed(RoutePaths.LOGIN_PAGE);
+      // Get.offAndToNamed(RoutePaths.LOGIN_PAGE);
     });
   }
 

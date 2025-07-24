@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:tcc_le_app/core/controllers/initial_binding.dart';
 import 'package:tcc_le_app/core/routes/route_pages.dart';
 import 'package:tcc_le_app/core/routes/route_paths.dart';
 import 'package:tcc_le_app/core/styles/colors.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       title: 'BoraTalk',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [],
+      initialBinding: InitialBindings(),
       getPages: RoutePages.pages,
       initialRoute: RoutePaths.SPLASH_PAGE,
       theme: ThemeData(

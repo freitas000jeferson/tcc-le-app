@@ -33,26 +33,30 @@ class BearerAuthorizationService {
     await Get.offAndToNamed(RoutePaths.LOGIN_PAGE);
   }
 
-  Future<OAuthToken?> getAccessToken() async {
+  Future<Either<Failure, OAuthToken>> getAccessToken() async {
     OAuthToken? token = await storage.fetch();
 
     if (token?.accessToken == null) {
       // redirect to login
       await redirectToLogin();
-      throw OAuthException('missing_access_token', 'Missing access token!');
+      return Left(
+        OAuthFailure('missing_refresh_token', 'Missing refresh token!'),
+      );
     }
-    if (await validateToken(token!)) return token;
+    if (await validateToken(token!)) return Right(token);
 
-    return refreshAccessToken();
+    return await refreshAccessToken();
   }
 
-  Future<OAuthToken?> refreshAccessToken() async {
+  Future<Either<Failure, OAuthToken>> refreshAccessToken() async {
     OAuthToken? token = await storage.fetch();
 
     if (token == null || token.refreshToken == null) {
       // redirect to login
       await redirectToLogin();
-      throw OAuthException('missing_refresh_token', 'Missing refresh token!');
+      return Left(
+        OAuthFailure('missing_refresh_token', 'Missing refresh token!'),
+      );
     }
     Either<Failure, dynamic> response = await refreshTokenService.handle(
       accessToken: token.accessToken ?? '',
@@ -62,9 +66,11 @@ class BearerAuthorizationService {
       // redirect to login
       await storage.clear();
       await redirectToLogin();
-      throw OAuthException('missing_refresh_token', 'Missing refresh token!');
+      return Left(
+        OAuthFailure('missing_refresh_token', 'Missing refresh token!'),
+      );
     }
     OAuthToken refresh = OAuthToken.fromMap((response as Right).value);
-    return saveToken(refresh);
+    return Right(await saveToken(refresh));
   }
 }

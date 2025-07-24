@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:tcc_le_app/components/ui/text.dart';
+import 'package:tcc_le_app/core/database/tables/message.dart';
 import 'package:tcc_le_app/core/styles/styles.dart';
 
 class BallonMessage extends StatelessWidget {
-  final String text;
-  final List<String>? buttons;
-  final bool? isViewer;
-  final bool myMessage;
-
-  const BallonMessage({
-    super.key,
-    required this.text,
-    this.buttons,
-    this.isViewer = false,
-    this.myMessage = true,
-  });
+  final Message message;
+  late bool isUserMessage;
+  BallonMessage({super.key, required this.message}) {
+    isUserMessage = message.from == 'me';
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment:
-          myMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+          isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Flexible(
           child: Container(
             margin: EdgeInsets.only(
               top: CustomSpacing.xxs,
-              right: myMessage ? 0 : CustomSpacing.lg,
-              left: myMessage ? CustomSpacing.lg : 0,
+              right: isUserMessage ? 0 : CustomSpacing.lg,
+              left: isUserMessage ? CustomSpacing.lg : 0,
             ),
             padding: CustomSpacing.squishXS,
             decoration: BoxDecoration(
               color:
-                  myMessage ? CustomColors.primary : CustomColors.primaryLight,
+                  isUserMessage
+                      ? CustomColors.primary
+                      : CustomColors.primaryLight,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(
-                  myMessage ? CustomBorders.radiusNone : CustomBorders.radiusMD,
+                  isUserMessage
+                      ? CustomBorders.radiusNone
+                      : CustomBorders.radiusMD,
                 ),
                 bottomLeft: Radius.circular(
-                  myMessage ? CustomBorders.radiusMD : CustomBorders.radiusNone,
+                  isUserMessage
+                      ? CustomBorders.radiusMD
+                      : CustomBorders.radiusNone,
                 ),
                 topLeft: Radius.circular(CustomBorders.radiusMD),
                 topRight: Radius.circular(CustomBorders.radiusMD),
@@ -46,9 +46,9 @@ class BallonMessage extends StatelessWidget {
               boxShadow: [CustomShadow.shadow],
             ),
             child: CustomText(
-              text,
+              message.textBody,
               color:
-                  myMessage
+                  isUserMessage
                       ? CustomColors.background
                       : CustomColors.neutralDark,
             ),
