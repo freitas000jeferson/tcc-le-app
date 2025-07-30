@@ -21,4 +21,18 @@ class UserProfile {
       level: json['level'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'username': username,
+      'avatar': avatar,
+      'level': level,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'UserProfile(id: $id, email: $email, username: $username, avatar: $avatar, level: $level)';
+  }
 }

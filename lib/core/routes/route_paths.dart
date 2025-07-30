@@ -12,4 +12,5 @@ class RoutePaths {
   static const VOICE_PAGE = "/voice_page";
   static const MAIN_TAB_PAGE = "/main_tab_page";
   static const SETTINGS_PAGE = "/settings_page";
+  static const IMAGE_VIEWER = "/image_viewer";
 }

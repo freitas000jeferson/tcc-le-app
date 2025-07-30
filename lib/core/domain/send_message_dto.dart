@@ -3,7 +3,8 @@ class SendMessageDto {
   final String message;
   final DateTime? userDate;
 
-  SendMessageDto({this.userId, required this.message, this.userDate});
+  SendMessageDto({this.userId, required this.message, DateTime? userDate})
+    : userDate = userDate ?? DateTime.now();
 
   factory SendMessageDto.fromJson(Map<String, dynamic> json) {
     return SendMessageDto(

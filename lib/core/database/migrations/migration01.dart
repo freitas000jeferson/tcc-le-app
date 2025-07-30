@@ -14,8 +14,8 @@ class Migration01 {
         ${MessageVarNames.metadata} TEXT,
         ${MessageVarNames.buttonsBody} TEXT,
         ${MessageVarNames.date} TEXT,
-        ${MessageVarNames.userDate} TEXT,
-        ${MessageVarNames.isViewer} INTEGER,
+        ${MessageVarNames.userDate} INTEGER,
+        ${MessageVarNames.isViewer} INTEGER
       )
     ''',
   ];

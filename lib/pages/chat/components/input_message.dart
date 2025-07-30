@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tcc_le_app/components/ui/button.dart';
 import 'package:tcc_le_app/components/ui/icon_button.dart';
 import 'package:tcc_le_app/core/styles/styles.dart';
+import 'package:tcc_le_app/pages/chat/controllers/chat_controller.dart';
 
-class InputMessage extends StatefulWidget {
-  const InputMessage({super.key});
+class InputMessage extends StatelessWidget {
+  InputMessage({super.key});
 
-  @override
-  State<InputMessage> createState() => _InputMessageState();
-}
+  final ChatController _controller = Get.find<ChatController>();
 
-class _InputMessageState extends State<InputMessage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,12 +31,20 @@ class _InputMessageState extends State<InputMessage> {
       ),
       child: Row(
         children: [
-          InputField(hintText: "Type message"),
-          CustomIconButton(
-            onPressed: () {},
-            variant: ButtonVariant.secondary,
-            padding: EdgeInsets.all(CustomSpacing.xs),
-            child: Icon(Icons.send_rounded, size: CustomFonts.xxl),
+          InputField(
+            hintText: "Type message",
+            controller: _controller.textController,
+          ),
+          Obx(
+            () => CustomIconButton(
+              onPressed: () {
+                _controller.sendMessage();
+              },
+              enable: _controller.isButtonEnabled.value,
+              variant: ButtonVariant.secondary,
+              padding: EdgeInsets.all(CustomSpacing.xs),
+              child: Icon(Icons.send_rounded, size: CustomFonts.xxl),
+            ),
           ),
         ],
       ),

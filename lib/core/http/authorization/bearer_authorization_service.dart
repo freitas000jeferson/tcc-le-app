@@ -15,14 +15,12 @@ class BearerAuthorizationService {
     : refreshTokenService = RefreshTokenService(),
       storage = OAuthDataStorage();
 
-  validateToken(token) {
+  bool validateToken(OAuthToken token) {
     var payload = Jwt.parseJwt(token.accessToken!);
-
-    return Future.value(
-      DateTime.fromMillisecondsSinceEpoch(
-        payload["exp"] * 1000,
-      ).isAfter(DateTime.now()),
-    );
+    print("✅ payload $payload");
+    return DateTime.fromMillisecondsSinceEpoch(
+      payload["exp"] * 1000,
+    ).isAfter(DateTime.now());
   }
 
   Future<OAuthToken> saveToken(OAuthToken token) async {
@@ -43,7 +41,7 @@ class BearerAuthorizationService {
         OAuthFailure('missing_refresh_token', 'Missing refresh token!'),
       );
     }
-    if (await validateToken(token!)) return Right(token);
+    if (validateToken(token!)) return Right(token);
 
     return await refreshAccessToken();
   }

@@ -3,34 +3,26 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:tcc_le_app/core/constants/api.dart';
+import 'package:tcc_le_app/core/database/tables/message.dart';
+import 'package:tcc_le_app/core/domain/send_message_dto.dart';
 import 'package:tcc_le_app/core/http/authorization/bearer_authorization_service.dart';
 import 'package:tcc_le_app/core/http/domain/oauth_token.dart';
 
-typedef SocketCallback<T> = void Function(T data);
-
-class WebSocketService {
-  static final WebSocketService _instance = WebSocketService._internal();
+class WebSocketServiceV2 {
   final String _url = API.SOCKET_URL;
   final _reconnectDelay = Duration(seconds: 3);
-  late IO.Socket? _socket;
-  final BearerAuthorizationService _authorizationService =
-      BearerAuthorizationService();
+  IO.Socket? _socket;
 
-  final Map<String, List<SocketCallback>> _listeners = {};
+  final BearerAuthorizationService _authorizationService;
 
-  bool _connected = false;
+  Function(List<Message>)? onMessage;
+  late Function? onConnect;
 
-  factory WebSocketService() {
-    return _instance;
-  }
-  WebSocketService._internal();
+  WebSocketServiceV2({required this.onMessage, this.onConnect})
+    : _authorizationService = BearerAuthorizationService();
 
   Future<bool> connect() async {
     try {
-      final completer = Completer<bool>();
-
-      if (_connected) return true;
-
       var response = await _authorizationService.getAccessToken();
       if (response.isLeft()) return false;
 
@@ -39,7 +31,6 @@ class WebSocketService {
         _url,
         IO.OptionBuilder()
             .setTransports(['websocket']) // usar apenas websocket
-            .disableAutoConnect()
             .setExtraHeaders({
               'Authorization': 'Bearer ${token.accessToken}',
             }) // header auth
@@ -48,23 +39,28 @@ class WebSocketService {
 
       _socket!.onConnect((_) {
         print('🟢 Conectado ao socket.io');
-        _connected = true;
-        completer.complete(true);
-        // if (onConnect != null) {
-        //   onConnect!();
-        // }
-        _listeners.forEach((event, callbacks) {
-          _socket!.on(event, (data) {
-            print('🟢 [$event]: $data');
-            for (var cb in callbacks) {
-              cb(data);
-            }
-          });
-        });
+        if (onConnect != null) {
+          onConnect!();
+        }
       });
+
+      _socket!.on('receive-message', (dynamic data) {
+        print('🟢 Mensagem recebida: $data');
+        //  final json = JsonDecoder(data);
+
+        List<Message> message;
+        if (data is List) {
+          message =
+              (data as List).map((item) => Message.fromChatbot(item)).toList();
+        } else {
+          message = [Message.fromJson(data)];
+        }
+        onMessage?.call(message);
+        // Aqui você pode fazer o parsing do JSON para seus modelos
+      });
+
       _socket!.onDisconnect((_) {
         print('🔴 Desconectado do socket.io');
-        _connected = false;
       });
 
       _socket!.onConnectError((data) {
@@ -74,42 +70,18 @@ class WebSocketService {
       _socket!.onError((data) {
         print('🔴 Erro: $data');
       });
-
-      _socket!.connect();
-
-      return completer.future;
+      return true;
     } catch (e) {
       return false;
     }
   }
 
-  void on(String event, SocketCallback callback) {
-    _listeners.putIfAbsent(event, () => []).add(callback);
-
-    _socket!.on(event, callback);
-    print('🟢 [$event]: conectado $_connected');
-  }
-
-  void off(String event, SocketCallback callback) {
-    _listeners[event]?.remove(callback);
-
-    _socket!.off(event, callback);
+  Future sendMessage(SendMessageDto message) async {
+    _socket?.emit('send-message', message.toJson());
   }
 
   void disconnect() {
     _socket?.disconnect();
-  }
-
-  void emit(String event, dynamic data) {
-    _socket?.emit(event, data);
-  }
-
-  void dispose() {
-    if (_connected) {
-      _socket?.dispose();
-    }
-    _listeners.clear();
-    _connected = false;
   }
 
   Future<void> _handleReconnection() async {

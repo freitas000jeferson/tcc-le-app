@@ -6,6 +6,7 @@ import 'package:tcc_le_app/core/http/domain/oauth_token.dart';
 import 'package:tcc_le_app/core/http/services/get_profile_service.dart';
 import 'package:tcc_le_app/core/http/services/login_service.dart';
 import 'package:tcc_le_app/core/http/services/logout_service.dart';
+import 'package:tcc_le_app/core/http/utils/profile_storage.dart';
 import 'package:tcc_le_app/core/utils/failures.dart';
 import 'package:tcc_le_app/core/utils/generic_state.dart';
 import 'package:tcc_le_app/core/utils/validators.dart';
@@ -18,6 +19,7 @@ class AuthController extends GetxController {
 
   final BearerAuthorizationService _authorizationService =
       BearerAuthorizationService();
+  final ProfileStorage _profileStorage = ProfileStorage();
 
   @override
   void onInit() {
@@ -67,12 +69,18 @@ class AuthController extends GetxController {
   }
 
   Future getProfile() async {
+    UserProfile? data = _profileStorage.fetch();
+
+    if (data != null) {
+      profile.value = data;
+      return;
+    }
+
     GetProfileService getProfileService = GetProfileService();
     var response = await getProfileService.handle();
     if (response.isLeft()) {
       return;
     }
-    print("profile ${(response as Right).value}");
     profile.value = (response as Right).value;
   }
 
@@ -85,6 +93,7 @@ class AuthController extends GetxController {
       return false;
     }
     logoutStatus.value = GenericState.success((response as Right).value);
+    _profileStorage.clear();
     return true;
   }
 
@@ -104,6 +113,6 @@ class AuthBinding extends Bindings {
   @override
   void dependencies() {
     // TODO: implement dependencies
-    Get.lazyPut<AuthController>(() => AuthController());
+    Get.put<AuthController>(AuthController(), permanent: true);
   }
 }

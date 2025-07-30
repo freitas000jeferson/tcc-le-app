@@ -15,4 +15,8 @@ class Button {
     title: json["title"] as String,
     payload: json["payload"] as String,
   );
+  @override
+  String toString() {
+    return 'Button(id: $id, title: $title, payload: $payload)';
+  }
 }

@@ -25,6 +25,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     GetPermissions.solicitarPermissaoMicrofone(context);
+    GetPermissions.solicitarPermissaoStorage(context);
     nextScreen();
   }
 
@@ -32,7 +33,8 @@ class _SplashPageState extends State<SplashPage> {
     var duration = Duration(milliseconds: 5750);
 
     String redirect = RoutePaths.LOGIN_PAGE;
-    if (await _controller.hasAuthenticated()) {
+    final hasAuthenticated = await _controller.hasAuthenticated();
+    if (hasAuthenticated) {
       redirect = RoutePaths.MAIN_TAB_PAGE;
     }
     return Timer(duration, () {

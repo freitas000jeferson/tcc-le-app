@@ -6,6 +6,8 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _db;
 
+  // factory DatabaseHelper() => instance;
+
   DatabaseHelper._init();
 
   Future<Database> get db async {

@@ -17,6 +17,7 @@ class SettingsPage extends StatelessWidget {
       body: DafaultLayout(
         child: Obx(
           () => Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 "${_controller.profile.value?.email}",
@@ -34,7 +35,7 @@ class SettingsPage extends StatelessWidget {
                 onPressed: () async {
                   var response = await _controller.logout();
                   if (response) {
-                    Get.toNamed(RoutePaths.LOGIN_PAGE);
+                    Get.offAndToNamed(RoutePaths.LOGIN_PAGE);
                   }
                 },
                 child: Row(

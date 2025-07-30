@@ -9,12 +9,12 @@ class Message {
   String userId;
   String from;
   String to;
-  String textBody;
-  String imageBody;
+  String? textBody;
+  String? imageBody;
   Map<String, dynamic>? metadata;
   List<Button>? buttonsBody;
-  DateTime date;
-  DateTime userDate;
+  DateTime? date;
+  DateTime? userDate;
   bool isViewer;
   Message({
     this.id,
@@ -28,7 +28,7 @@ class Message {
     this.buttonsBody,
     required this.date,
     required this.userDate,
-    required this.isViewer,
+    this.isViewer = true,
   });
 
   Map<String, dynamic> toJson() => {
@@ -46,18 +46,18 @@ class Message {
       buttonsBody ?? <Button>[],
     ),
     MessageVarNames.date: TypeConverter.dateToJson(date),
-    MessageVarNames.userDate: TypeConverter.dateToJson(userDate),
+    MessageVarNames.userDate: TypeConverter.dateToInt(userDate),
     MessageVarNames.isViewer: TypeConverter.booleanToJson(isViewer),
   };
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
     id: json[MessageVarNames.id] as int,
-    objectId: json[MessageVarNames.objectId] as String,
-    userId: json[MessageVarNames.userId] as String,
-    from: json[MessageVarNames.from] as String,
-    to: json[MessageVarNames.to] as String,
-    textBody: json[MessageVarNames.textBody] as String,
-    imageBody: json[MessageVarNames.imageBody] as String,
+    objectId: json[MessageVarNames.objectId],
+    userId: json[MessageVarNames.userId],
+    from: json[MessageVarNames.from],
+    to: json[MessageVarNames.to],
+    textBody: json[MessageVarNames.textBody],
+    imageBody: json[MessageVarNames.imageBody],
     metadata: MetadataConverter.fromJson(
       json[MessageVarNames.metadata] ?? '{}',
     ),
@@ -65,9 +65,36 @@ class Message {
       json[MessageVarNames.buttonsBody] ?? '[]',
     ),
     date: TypeConverter.dateFromJson(json[MessageVarNames.date]),
-    userDate: TypeConverter.dateFromJson(json[MessageVarNames.userDate]),
+    userDate: TypeConverter.dateFromInt(json[MessageVarNames.userDate]),
     isViewer: TypeConverter.booleanFromJson(json[MessageVarNames.isViewer]),
   );
+
+  factory Message.fromChatbot(Map<String, dynamic> json) => Message(
+    objectId: json["id"],
+    userId: json["userId"],
+    from: json["from"],
+    to: json["to"],
+    textBody: json["textBody"],
+    imageBody: json["imageBody"],
+    metadata: json["metadata"],
+    buttonsBody:
+        json["buttonsBody"] != null
+            ? (json["buttonsBody"] as List)
+                .map((e) => Button.fromJson(e))
+                .toList()
+            : null,
+    date: json["date"] != null ? DateTime.parse(json["date"]) : DateTime.now(),
+    userDate:
+        json["userDate"] != null
+            ? DateTime.parse(json["userDate"])
+            : DateTime.now(),
+    isViewer: json["isViewer"] ?? false,
+  );
+
+  @override
+  String toString() {
+    return 'Message(id: $id, objectId: $objectId, userId: $userId, from: $from, to: $to, textBody: $textBody, imageBody: $imageBody, metadata: $metadata, buttonsBody: $buttonsBody, date: $date, userDate: $userDate, isViewer: $isViewer)';
+  }
 }
 
 class ButtonBodyConverter {
@@ -96,8 +123,8 @@ class MessageVarNames {
   static const String id = "id";
   static const String objectId = "objectId";
   static const String userId = "userId";
-  static const String from = "from";
-  static const String to = "to";
+  static const String from = "from_col";
+  static const String to = "to_col";
   static const String textBody = "textBody";
   static const String imageBody = "imageBody";
   static const String metadata = "metadata";
